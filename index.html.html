@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>3D Cards with Random Images and 3D Objects</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f2f2f2;
+            perspective: 800px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            position: relative;
+            width: 200px;
+            height: 300px;
+            background-color: #fff;
+            border-radius: 10px;
+            transform-style: preserve-3d;
+            transition: transform 0.3s, width 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 0 20px;
+            will-change: transform;
+            transform: rotateX(0deg) rotateY(0deg);
+        }
+
+        .card:hover {
+            transform: scale(1.1) rotateX(10deg) rotateY(10deg);
+            width: 220px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-inner {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.8s;
+        }
+
+        .card-front,
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+        }
+
+        .card-front {
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card-back {
+            background-color: #f2f2f2;
+            transform: rotateY(180deg);
+        }
+
+        .card-image {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 10px;
+        }
+
+        .card-object {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100px;
+            height: 100px;
+            background: url('path/to/your/image.png') center center no-repeat;
+            background-size: contain;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-inner">
+                <div class="card-front">
+                    <!-- Custom Image 1 -->
+                    <img class="card-image" src="image/01.jpg" alt="Custom Image 1">
+                </div>
+                <div class="card-back">
+                    <!-- Custom Image 1 -->
+                    <img class="card-image" src="image/01.jpg" alt="Custom Image 1">
+                </div>
+            </div>
+            <div class="card-object"></div>
+        </div>
+    
+        <div class="card">
+            <div class="card-inner">
+                <div class="card-front">
+                    <!-- Custom Image 2 -->
+                    <a href="water.html"> <!-- Replace "your-file-link.html" with the actual file path or URL -->
+                        <img class="card-image" src="image/02.jpg" alt="Custom Image 2">
+                    </a>
+                </div>
+                <div class="card-back">
+                    <!-- Custom Image 2 -->
+                    <img class="card-image" src="image/02.jpg" alt="Custom Image 2">
+                </div>
+            </div>
+            <div class="card-object"></div>
+        </div>
+    
+        <div class="card">
+            <div class="card-inner">
+                <div class="card-front">
+                    <!-- Custom Image 3 -->
+                    <img class="card-image" src="image/03.jpg" alt="Custom Image 3">
+                </div>
+                <div class="card-back">
+                    <!-- Custom Image 3 -->
+                    <img class="card-image" src="image/03.jpg" alt="Custom Image 3">
+                </div>
+            </div>
+            <div class="card-object"></div>
+        </div>
+    </div>
+    
+
+    <script>
+        const container = document.querySelector('.container');
+        const cards = document.querySelectorAll('.card');
+
+        container.addEventListener('mousemove', handleMouseMove);
+        container.addEventListener('mouseleave', handleMouseLeave);
+
+        function handleMouseMove(event) {
+            const cardRects = Array.from(cards).map(card => card.getBoundingClientRect());
+
+            cards.forEach((card, index) => {
+                const cardRect = cardRects[index];
+                const cardCenterX = cardRect.left + cardRect.width / 2;
+                const cardCenterY = cardRect.top + cardRect.height / 2;
+                const mouseX = event.clientX;
+                const mouseY = event.clientY;
+
+                if (
+                    mouseX >= cardRect.left &&
+                    mouseX <= cardRect.right &&
+                    mouseY >= cardRect.top &&
+                    mouseY <= cardRect.bottom
+                ) {
+                    const rotateX = (mouseY - cardCenterY) / 10;
+                    const rotateY = (cardCenterX - mouseX) / 10;
+                    card.style.transform = `scale(1.1) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                } else {
+                    card.style.transform = 'rotateX(0deg) rotateY(0deg)';
+                }
+            });
+        }
+
+        function handleMouseLeave() {
+            cards.forEach(card => {
+                card.style.transform = 'rotateX(0deg) rotateY(0deg)';
+            });
+        }
+    </script>
+</body>
+</html>
